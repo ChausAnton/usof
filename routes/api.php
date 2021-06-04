@@ -26,3 +26,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::resource('user', 'App\Http\Controllers\UserController');
 Route::resource('posts', 'App\Http\Controllers\PostsController');
 Route::resource('category', 'App\Http\Controllers\CategoryController');
+Route::resource('comment', 'App\Http\Controllers\CommentController');
+Route::resource('like', 'App\Http\Controllers\LikeController');
