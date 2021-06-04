@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Post extends Model
+{
+    protected $fillable = [
+        'author',
+        'title',
+        'publish_date',
+        'content',
+        'category_id',
+        'likes'
+    ];
+
+    protected $casts = [
+        'category_id' => 'array'
+    ];
+
+}
