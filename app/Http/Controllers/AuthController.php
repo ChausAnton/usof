@@ -33,7 +33,6 @@ class AuthController extends Controller
         $credentials = $request->only(['login', 'password']);
         if(($token = JWTAuth::attempt($credentials))) {
             $user = JWTAuth::user();
-            $token = JWTAuth::attempt($credentials);
             $user->token = $token;
             $user->save();
             return response([
@@ -45,5 +44,20 @@ class AuthController extends Controller
             ]);
         }
         
+    }
+
+    public function Logout()
+    {
+        try {
+            $user = auth()->user();
+            if($user) {
+                JWTAuth::invalidate(JWTAuth::getToken());
+                $user->token = '';
+                $user->save();
+            }
+            return $user;
+        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return response(['error' => $e->getMessage()], 401);
+        }
     }
 }
