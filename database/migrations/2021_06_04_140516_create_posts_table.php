@@ -19,7 +19,6 @@ class CreatePostsTable extends Migration
             $table->string('title')->default('');
             $table->string('content')->nullable();
             $table->decimal('likes')->default(0);
-            $table->json('category_id');
             $table->timestamps();
         });
     }

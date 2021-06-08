@@ -12,12 +12,6 @@ class Post extends Model
         'title',
         'publish_date',
         'content',
-        'category_id',
         'likes'
     ];
-
-    protected $casts = [
-        'category_id' => 'array'
-    ];
-
 }
