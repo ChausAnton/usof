@@ -18,7 +18,7 @@ class CreateLikesTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('post_id')->nullable();
             $table->unsignedBigInteger('comment_id')->nullable();
-            $table->enum('type', ['like', 'dislike'])->default('like');
+            $table->enum('type', ['like', 'dislike']);
             $table->timestamps();
         });
     }

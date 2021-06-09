@@ -19,7 +19,7 @@ class CreatePostsTable extends Migration
             $table->string('title')->default('');
             $table->string('content')->nullable();
             $table->decimal('likes')->default(0);
-            $table->enum('role', ['active', 'inactive'])->default('active');
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }
