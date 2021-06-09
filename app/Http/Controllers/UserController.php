@@ -1,70 +1,57 @@
 <?php
 
 namespace App\Http\Controllers;
-
+include '/Users/antoncaus/Desktop/usoft/app/Support/helpers.php';
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
+
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         //get users
+        if(!isAdmin(auth()->user())) {
+            return "only admin can see all profiles";
+        }
         return User::all();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
-        //create a user
+        //create a user 
+             
         return User::create($request->all());
-    }
+    } // in future needed to delete
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function show($id)
     {
         //show user
         return User::find($id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function update(Request $request, $id)
     {
         //update user
+        if(!isAdmin(auth()->user()) && !isUser(JWTAuth::getToken(), $id)) {
+            return "only admin and owner of account can change account's data";
+        }
         $user = User::find($id);
         $user->update($request->all());
         return $user;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function destroy($id)
     {
+        if(!isAdmin(auth()->user())) {
+            return "only admin can delete user";
+        }
         return User::destroy($id);
         //delete user
         

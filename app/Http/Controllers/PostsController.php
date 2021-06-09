@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+include '/Users/antoncaus/Desktop/usoft/app/Support/helpers.php';
+include '/Users/antoncaus/Desktop/usoft/app/Http/Controllers/CategorySubTableController.php';
 use Illuminate\Http\Request;
 use App\Models\Post;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Models\User;
 
 class PostsController extends Controller
 {
@@ -13,43 +17,34 @@ class PostsController extends Controller
         return Post::all();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    
     public function store(Request $request)
     {
+        if(!auth()->user()) {
+            return "only logged users can create posts";
+        }
+
         $data = [
             'author' => $request->input('author'),
             'title' => $request->input('title'),
             'content' => $request->input('content'),
             'likes' => $request->input('likes'),
-            'category_id' => $request->input('category_id')
         ];
-        return Post::create($data);
+
+        $post = Post::create($data);
+        $CategorySub = New CategorySubTableController();
+        $CategorySub->addCategory($request['category_id'], $post->id);
+        return $post;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         //show Post
         return Post::find($id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function update(Request $request, $id)
     {
         //update Post
@@ -58,14 +53,13 @@ class PostsController extends Controller
         return $Post;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
+        $post = Post::find($id);
+        if(!isAdmin(auth()->user()) && !isUser(JWTAuth::getToken(), getUserByLogin($post->author)->id)) {
+            return "only admin and author can delete post";
+        }
         return Post::destroy($id);
         //delete Post
         

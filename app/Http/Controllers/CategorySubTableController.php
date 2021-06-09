@@ -25,6 +25,18 @@ class CategorySubTableController extends Controller
         return CategorySubTabel::create($request->all());
     }
 
+    public function addCategory($CategoryJson, $postID)
+    {
+        foreach($CategoryJson as $cat) {
+            $data = [
+                'post_id' => $postID,
+                'category_id' => $cat
+            ];
+            CategorySubTabel::create($data);
+        }
+        return true;
+    }
+
     /**
      * Display the specified resource.
      *

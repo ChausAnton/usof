@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+include '/Users/antoncaus/Desktop/usoft/app/Support/helpers.php';
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
@@ -19,6 +20,14 @@ class AuthController extends Controller
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
+
+        $role = $request->role;
+        if(strcmp($role, 'admin') == 0) {
+            $user = auth()->user();
+            if(!isAdmin(auth()->user())) {
+                return "only admin can create admin";
+            }
+        } 
 
         $user = User::create($validated);
 
