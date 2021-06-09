@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Illuminate\Http\Request;
 use App\Models\CategorySubTabel;
+
+//////////////// remove able to send request to this controller
+
 
 class CategorySubTableController extends Controller
 {
@@ -11,19 +15,13 @@ class CategorySubTableController extends Controller
     {
         //get CategorySubTabel
         return CategorySubTabel::all();
-    }
+    }//to delete
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    
     public function store(Request $request)
     {
-       
         return CategorySubTabel::create($request->all());
-    }
+    }// to delet
 
     public function addCategory($CategoryJson, $postID)
     {
@@ -38,43 +36,28 @@ class CategorySubTableController extends Controller
         return true;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    public function getCategoriesForPost($postID) {
+        return DB::select("select * from category_sub where post_id = $postID;");
+    }
+    
     public function show($id)
     {
         //show CategorySubTabel
         return CategorySubTabel::find($id);
-    }
+    }//to delete
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
         //update CategorySubTabel
         $CategorySubTabel = CategorySubTabel::find($id);
         $CategorySubTabel->update($request->all());
         return $CategorySubTabel;
-    }
+    }//to delet
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         return CategorySubTabel::destroy($id);
         //delete CategorySubTabel
-        
-    }
+    }// to delete
 }

@@ -1,5 +1,8 @@
 <?php
+
+//include '/Users/antoncaus/Desktop/usoft/app/Http/Controllers/CategorySubTableController.php';
 use App\Models\User;
+use App\Models\Post;
 
 function isAdmin($user) {
     if(!$user || strcmp($user->role, 'admin') != 0) {
@@ -26,3 +29,9 @@ function getOnlyAtivePosts($id) {
     }
     return DB::select("select * from posts where status = 'active';");
 }
+
+// function addCategories($cat_id, $post_id) {
+//     $CategorySub = New CategorySubTableController();
+//     $CategorySub->addCategory($cat_id, $post_id);
+// }
+

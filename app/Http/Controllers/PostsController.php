@@ -2,22 +2,57 @@
 
 namespace App\Http\Controllers;
 
+//include '/Users/antoncaus/Desktop/usoft/app/Http/Controllers/CategorySubTableController.php';
 include '/Users/antoncaus/Desktop/usoft/app/Support/helpers.php';
-include '/Users/antoncaus/Desktop/usoft/app/Http/Controllers/CategorySubTableController.php';
 use Illuminate\Http\Request;
 use App\Models\Post;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
+use DB;
+
+//////////////////////
+function getPostsWithCategory($all) {
+    $CategorySub = New CategorySubTableController();
+    if($all) {
+        $postData = Post::all();
+        foreach($postData as $post) {
+            $post->categories = $CategorySub->getCategoriesForPost($post->id);
+        }
+        return $postData;
+    }
+    $postData = getOnlyAtivePosts(NULL);
+    foreach($postData as $post) {
+        $post->categories = $CategorySub->getCategoriesForPost($post->id);
+    }
+    return $postData;
+    
+}// move to helpers
+
+function getOnePostWithCategory($admin, $id) {
+    $CategorySub = New CategorySubTableController();
+    if($admin) {
+        $postData = DB::select("select * from posts where id = $id;");;
+        if($postData)
+            $postData[0]->categories = $CategorySub->getCategoriesForPost($id);
+        return $postData;
+    }
+    $postData = getOnlyAtivePosts($id);
+    if($postData)
+        $postData[0]->categories = $CategorySub->getCategoriesForPost($id);
+    return $postData;
+}// move to helpers
+/////////////////////////
 
 class PostsController extends Controller
 {
     public function index()
     {
         //get Posts
-        if(isAdmin(auth()->user()))
-            return Post::all();
+        if(isAdmin(auth()->user())) {
+            return getPostsWithCategory(true);
+        }
 
-        return getOnlyAtivePosts(NULL);
+        return getPostsWithCategory(false);
         
     }
 
@@ -47,8 +82,8 @@ class PostsController extends Controller
     {
         //show Post
         if(isAdmin(auth()->user()))
-            return Post::find($id);
-        return getOnlyAtivePosts($id);
+            return getOnePostWithCategory(true, $id);
+        return getOnePostWithCategory(false, $id);
     }   
 
     

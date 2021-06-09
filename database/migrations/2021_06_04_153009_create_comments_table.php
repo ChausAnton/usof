@@ -18,6 +18,7 @@ class CreateCommentsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('post_id');
             $table->string('content');
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->integer('rating')->default(0);
             $table->timestamps();
         });
