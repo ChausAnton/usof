@@ -101,23 +101,21 @@ class PostsController extends Controller
         }
 
         if(isAdmin(auth()->user())) {
-            $Post = Post::find($id);
             if(isset($request['status'])) {
-                $Post->status = $request['status'];
-                $Post->save();
+                $post->status = $request['status'];
+                $post->save();
             }
-           return $Post;
+           return $post;
         }
 
-        $Post = Post::find($id);
 
         $data = [
-            'title' => ($request->input('title') ? $request->input('title') : $Post->title),
-            'content' => ($request->input('content') ? $request->input('content') : $Post->content),
+            'title' => ($request->input('title') ? $request->input('title') : $post->title),
+            'content' => ($request->input('content') ? $request->input('content') : $post->content),
         ];
         
-        $Post->update($data);
-        return $Post;
+        $post->update($data);
+        return $post;
     }
 
 

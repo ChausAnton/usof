@@ -30,6 +30,13 @@ function getOnlyAtivePosts($id) {
     return DB::select("select * from posts where status = 'active';");
 }
 
+function getOnlyAtiveComments($id) {
+    if($id) {
+        return DB::select("select * from comments where status = 'active' and id = $id;");
+    }
+    return DB::select("select * from comments where status = 'active';");
+}
+
 // function addCategories($cat_id, $post_id) {
 //     $CategorySub = New CategorySubTableController();
 //     $CategorySub->addCategory($cat_id, $post_id);

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+include '/Users/antoncaus/Desktop/usoft/app/Support/helpers.php';
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Http\Request;
 use App\Models\Comment;
 
@@ -9,8 +11,10 @@ class CommentController extends Controller
 {
     public function index()
     {
-        //get Comment
-        return Comment::all();
+        //get Comments
+        if(isAdmin(auth()->user())) 
+            return Comment::all();
+        return getOnlyAtiveComments(NULL);
     }
 
     /**
@@ -21,8 +25,8 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-       
-        return Comment::create($request->all());
+        if(auth()->user())
+            return Comment::create($request->all());
     }
 
     /**
@@ -34,7 +38,9 @@ class CommentController extends Controller
     public function show($id)
     {
         //show Comment
-        return Comment::find($id);
+        if(isAdmin(auth()->user())) 
+            return Comment::find($id);
+        return getOnlyAtiveComments($id);
     }
 
     /**
@@ -48,7 +54,21 @@ class CommentController extends Controller
     {
         //update Comment
         $Comment = Comment::find($id);
-        $Comment->update($request->all());
+        if(!isAdmin(auth()->user()) && !isUser(JWTAuth::getToken(), getUserByLogin($Comment->author)->id)) {
+            return "only admin and author can change comment's data";
+        }
+
+        if(isAdmin(auth()->user())) {
+            if(isset($request['status'])) {
+                $Comment->status = $request['status'];
+                $Comment->save();
+            }
+           return $Comment;
+        }
+        if(isset($request['content'])) {
+            $Comment->content = $request['content'];
+            $Comment->save();
+        }
         return $Comment;
     }
 
@@ -60,6 +80,10 @@ class CommentController extends Controller
      */
     public function destroy($id)
     {
+        $post = Comment::find($id);
+        if(!isAdmin(auth()->user()) && !isUser(JWTAuth::getToken(), $post->user_id)) {
+            return "only admin and author can delete comment";
+        }
         return Comment::destroy($id);
         //delete Comment
         

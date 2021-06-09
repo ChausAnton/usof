@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+include '/Users/antoncaus/Desktop/usoft/app/Support/helpers.php';
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Http\Request;
 use App\Models\Like;
+use DB;
 
 class LikeController extends Controller
 {
     public function index()
     {
-        //get Like
+        //get Likes
         return Like::all();
     }
 
@@ -21,8 +24,15 @@ class LikeController extends Controller
      */
     public function store(Request $request)
     {
-       
-        return Like::create($request->all());
+        if(auth()->user()) {//likes
+            $like = DB::select("select * from likes where user_id = $request->user_id and post_id = $request->post_id;");
+            if(!$like)
+                return Like::create($request->all());
+            elseif($like && strcmp($like[0]->type, $request['type']) != 0) {
+                DB::delete("delete from likes where user_id = $request->user_id and post_id = $request->post_id;");
+                return Like::create($request->all());
+            }
+        }
     }
 
     /**
@@ -50,7 +60,7 @@ class LikeController extends Controller
         $Like = Like::find($id);
         $Like->update($request->all());
         return $Like;
-    }
+    }// to delete
 
     /**
      * Remove the specified resource from storage.
@@ -63,5 +73,5 @@ class LikeController extends Controller
         return Like::destroy($id);
         //delete Like
         
-    }
+    }// to delete
 }
