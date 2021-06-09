@@ -27,6 +27,7 @@ class CategorySubTableController extends Controller
 
     public function addCategory($CategoryJson, $postID)
     {
+        DB::delete("delete from category_sub where post_id = $postID;");
         foreach($CategoryJson as $cat) {
             $data = [
                 'post_id' => $postID,

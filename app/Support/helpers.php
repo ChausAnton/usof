@@ -19,3 +19,10 @@ function isUser($token, $userId) {
 function getUserByLogin($login) {
     return DB::table('users')->where('login', $login)->first();
 }
+
+function getOnlyAtivePosts($id) {
+    if($id) {
+        return DB::select("select * from posts where status = 'active' and id = $id;");
+    }
+    return DB::select("select * from posts where status = 'active';");
+}

@@ -14,7 +14,11 @@ class PostsController extends Controller
     public function index()
     {
         //get Posts
-        return Post::all();
+        if(isAdmin(auth()->user()))
+            return Post::all();
+
+        return getOnlyAtivePosts(NULL);
+        
     }
 
     
@@ -29,6 +33,7 @@ class PostsController extends Controller
             'title' => $request->input('title'),
             'content' => $request->input('content'),
             'likes' => $request->input('likes'),
+            'status' => $request->input('status')
         ];
 
         $post = Post::create($data);
@@ -41,15 +46,42 @@ class PostsController extends Controller
     public function show($id)
     {
         //show Post
-        return Post::find($id);
-    }
+        if(isAdmin(auth()->user()))
+            return Post::find($id);
+        return getOnlyAtivePosts($id);
+    }   
 
     
     public function update(Request $request, $id)
     {
         //update Post
+        $post = Post::find($id);
+        if(!isAdmin(auth()->user()) && !isUser(JWTAuth::getToken(), getUserByLogin($post->author)->id)) {
+            return "only admin and author of post can change post's data";
+        }
+
+        if(isset($request['category_id'])) {
+            $CategorySub = New CategorySubTableController();
+            $CategorySub->addCategory($request['category_id'], $post->id);
+        }
+
+        if(isAdmin(auth()->user())) {
+            $Post = Post::find($id);
+            if(isset($request['status'])) {
+                $Post->status = $request['status'];
+                $Post->save();
+            }
+           return $Post;
+        }
+
         $Post = Post::find($id);
-        $Post->update($request->all());
+
+        $data = [
+            'title' => ($request->input('title') ? $request->input('title') : $Post->title),
+            'content' => ($request->input('content') ? $request->input('content') : $Post->content),
+        ];
+        
+        $Post->update($data);
         return $Post;
     }
 
