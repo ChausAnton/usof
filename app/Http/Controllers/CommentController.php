@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-include '/Users/antoncaus/Desktop/usoft/app/Support/helpers.php';
+//include '/Users/anchaus/Desktop/usoft/app/Support/helpers.php';
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Http\Request;
 use App\Models\Comment;
@@ -25,8 +25,17 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        if(auth()->user())
-            return Comment::create($request->all());
+        if(auth()->user()) {
+            $data = [
+                'author' => auth()->user()->login,
+                'user_id' => auth()->user()->id,
+                'post_id' => $request->input('post_id'),
+                'content' => $request->input('content'),
+                'rating' => 0,
+                'status' => 'active'
+            ];
+            return Comment::create($data);
+        }
     }
 
     /**

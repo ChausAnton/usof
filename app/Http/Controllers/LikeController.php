@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-include '/Users/antoncaus/Desktop/usoft/app/Support/helpers.php';
+//include '/Users/anchaus/Desktop/usoft/app/Support/helpers.php';
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Http\Request;
 use App\Models\Like;
@@ -25,12 +25,38 @@ class LikeController extends Controller
     public function store(Request $request)
     {
         if(auth()->user()) {//likes
-            $like = DB::select("select * from likes where user_id = $request->user_id and post_id = $request->post_id;");
-            if(!$like)
-                return Like::create($request->all());
+            if($request->post_id)
+                $like = DB::select("select * from likes where user_id = " . auth()->user()->id . " and post_id = $request->post_id;");
+            else
+                $like = DB::select("select * from likes where user_id = " . auth()->user()->id . " and comment_id = $request->comment_id;");
+            if(!$like) {
+                $data = [
+                    'author' => auth()->user()->login,
+                    'user_id' => auth()->user()->id,
+                    'post_id' => $request->input('post_id'),
+                    'comment_id' => $request->input('comment_id'),
+                    'content' => $request->input('content'),
+                    'type' => $request->input('type'),
+                    'status' => 'active'
+                ];
+                
+                return Like::create($data);
+            }
             elseif($like && strcmp($like[0]->type, $request['type']) != 0) {
-                DB::delete("delete from likes where user_id = $request->user_id and post_id = $request->post_id;");
-                return Like::create($request->all());
+                if($request->post_id)
+                    DB::delete("delete from likes where user_id = " . auth()->user()->id . " and post_id = $request->post_id;");
+                else 
+                    DB::delete("delete from likes where user_id = " . auth()->user()->id . " and comment_id = $request->comment_id;");
+                $data = [
+                    'author' => auth()->user()->login,
+                    'user_id' => auth()->user()->id,
+                    'post_id' => $request->input('post_id'),
+                    'comment_id' => $request->input('comment_id'),
+                    'content' => $request->input('content'),
+                    'type' => $request->input('type'),
+                    'status' => 'active'
+                ];
+                return Like::create($data);
             }
         }
     }

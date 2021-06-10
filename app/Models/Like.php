@@ -9,6 +9,7 @@ class Like extends Model
 {
     
     protected $fillable = [
+        'author',
         'user_id',
         'post_id',
         'comment_id',

@@ -15,14 +15,16 @@ class CreateLikesTable extends Migration
     {
         Schema::create('likes', function (Blueprint $table) {
             $table->id();
+            $table->string('author');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('post_id')->nullable();
             $table->unsignedBigInteger('comment_id')->nullable();
             $table->enum('type', ['like', 'dislike']);
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('post_id')->references('id')->on('posts')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      *

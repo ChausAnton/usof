@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 //include '/Users/antoncaus/Desktop/usoft/app/Http/Controllers/CategorySubTableController.php';
-include '/Users/antoncaus/Desktop/usoft/app/Support/helpers.php';
+//include '/Users/anchaus/Desktop/usoft/app/Support/helpers.php';
 use Illuminate\Http\Request;
 use App\Models\Post;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -64,11 +64,12 @@ class PostsController extends Controller
         }
 
         $data = [
-            'author' => $request->input('author'),
+            'author' => auth()->user()->login,
+            'author_id' => auth()->user()->id,
             'title' => $request->input('title'),
             'content' => $request->input('content'),
-            'likes' => $request->input('likes'),
-            'status' => $request->input('status')
+            'likes' => 0,
+            'status' => 'active'
         ];
 
         $post = Post::create($data);
