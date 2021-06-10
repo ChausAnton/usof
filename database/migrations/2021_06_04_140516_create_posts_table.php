@@ -19,7 +19,7 @@ class CreatePostsTable extends Migration
             $table->unsignedBigInteger('author_id');
             $table->string('title')->default('');
             $table->string('content')->nullable();
-            $table->decimal('likes')->default(0);
+            $table->integer('likes')->default(0);
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });

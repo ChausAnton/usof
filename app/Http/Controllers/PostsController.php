@@ -14,13 +14,13 @@ use DB;
 function getPostsWithCategory($all) {
     $CategorySub = New CategorySubTableController();
     if($all) {
-        $postData = Post::all();
+        $postData = applySortingAdmin(Post::all());
         foreach($postData as $post) {
             $post->categories = $CategorySub->getCategoriesForPost($post->id);
         }
         return $postData;
     }
-    $postData = getOnlyAtivePosts(NULL);
+    $postData = applySortingUser(Post::all());
     foreach($postData as $post) {
         $post->categories = $CategorySub->getCategoriesForPost($post->id);
     }
