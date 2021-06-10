@@ -68,23 +68,36 @@ function changeRating($postID, $like) {
     $user->save();
 }
 
-function filterAdmin($posts, Request $request) {
+function filter($posts, Request $request) {
     if ($request->header('dateStart') != null) {
        
         return $posts->whereBetween('created_at', [$request->header('dateStart'), $request->header('dateEnd')])->all();
     }
-}
-
-function filteruser($posts, Request $request) {
-    if ($request->header('dateStart') != null) {
-       
-        return $posts->whereBetween('created_at', [$request->header('dateStart'), $request->header('dateEnd')])->where('status', 'active')->all();
+    if(strcmp($request->header('filter'), 'status') == 0 && isAdmin(auth()->user())) {
+        return $posts->where('status', $request->header('filter_status'))->all();
+    }
+    if(strcmp($request->header('filter'), 'category') == 0) {
+        $str = "";
+        $i = 0;
+        foreach(explode(" ", $request->header('categories')) as $id) {
+            if($i > 0) 
+                $str .= " or ";
+            $str .= "category_id = " . $id;
+            $i += 1;
+        }
+        $postsID = DB::select("select distinct post_id from category_sub where " . $str . ";");
+        $res = array();
+        foreach($postsID as $id) { 
+            array_push($res, Post::find($id->post_id));
+        }
+        return $res;
     }
 }
 
+
 function applySortingFiltersAdmin($posts, Request $request) {
     if($request->header('filter') != null) {
-        return filterAdmin($posts, $request);
+        return filter($posts, $request);
     }
 
     $sort = $request->header('sort');
@@ -112,7 +125,7 @@ function applySortingFiltersAdmin($posts, Request $request) {
 
 function applySortingFiltersUser($posts, Request $request) {
     if($request->header('filter') != null) {
-        return filteruser($posts, $request);
+        return filter($posts, $request);
     }
     
     $sort = $request->header('sort');

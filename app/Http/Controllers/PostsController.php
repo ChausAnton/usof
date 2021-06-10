@@ -21,6 +21,8 @@ function getPostsWithCategory($all, Request $request) {
         return $postData;
     }
     $postData = applySortingFiltersUser(Post::all(), $request);
+    if(is_string($postData) == 1)
+        return $postData;
     foreach($postData as $post) {
         $post->categories = $CategorySub->getCategoriesForPost($post->id);
     }
