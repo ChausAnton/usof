@@ -15,6 +15,8 @@ class CategoryController extends Controller
         //get Category
         if(isAdmin(auth()->user()))
             return Category::all();
+        return "only admin can see all categories";
+
     }
 
     
@@ -23,6 +25,7 @@ class CategoryController extends Controller
         //create a Category
         if(isAdmin(auth()->user()))
             return Category::create($request->all());
+        return "only admin can create a new category";
     }
 
     
@@ -41,6 +44,7 @@ class CategoryController extends Controller
             $Category->update($request->all());
             return $Category;
         }
+        return "only admin can change info about category";
     }
 
 
@@ -48,6 +52,7 @@ class CategoryController extends Controller
     {
         if(isAdmin(auth()->user()))
             return Category::destroy($id);
+        return "only admin can delete category";
         //delete Category
         
     }
