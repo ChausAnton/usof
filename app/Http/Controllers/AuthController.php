@@ -39,6 +39,7 @@ class AuthController extends Controller
 
     public function Login(Request $request)
     {
+
         $credentials = $request->only(['login', 'password']);
         if(($token = JWTAuth::attempt($credentials))) {
             $user = JWTAuth::user();

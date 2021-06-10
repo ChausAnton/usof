@@ -63,11 +63,17 @@ class PostsController extends Controller
             return "only logged users can create posts";
         }
 
+        $validated =  $request->validate([
+            'title' => 'required|string',
+            'content' => 'required|string',
+            'category_id' => 'required'
+        ]);
+
         $data = [
             'author' => auth()->user()->login,
             'author_id' => auth()->user()->id,
-            'title' => $request->input('title'),
-            'content' => $request->input('content'),
+            'title' => $validated['title'],
+            'content' => $validated['content'],
             'likes' => 0,
             'status' => 'active'
         ];

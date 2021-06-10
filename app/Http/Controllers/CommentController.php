@@ -25,12 +25,17 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
+
+        $validated =  $request->validate([
+            'post_id'=> 'required',
+            'content'=> 'required|string'
+        ]);
         if(auth()->user()) {
             $data = [
                 'author' => auth()->user()->login,
                 'user_id' => auth()->user()->id,
-                'post_id' => $request->input('post_id'),
-                'content' => $request->input('content'),
+                'post_id' => $validated ['post_id'],
+                'content' => $validated ['content'],
                 'rating' => 0,
                 'status' => 'active'
             ];
