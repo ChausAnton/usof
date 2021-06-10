@@ -4,6 +4,7 @@
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Comment;
+use Illuminate\Http\Request;
 
 function isAdmin($user) {
     if(!$user || strcmp($user->role, 'admin') != 0) {
@@ -67,11 +68,32 @@ function changeRating($postID, $like) {
     $user->save();
 }
 
-function applySortingAdmin($posts) {
-    if (!isset($_GET['sort']))
-        $_GET['sort'] = 'likes';
+function filterAdmin($posts, Request $request) {
+    if (isset($_GET['dateStart'])) {
+        // if ($_GET['dateStart'] == $_GET['dateEnd']) // set the end of the day
+        //     $_GET['dateEnd'] = $_GET['dateEnd'] . ' 23:59:59';
+        return $posts->whereBetween('created_at', [$request->header('dateStart'), $request->header('dateEnd')]);
+    }
+}
+
+function filteruser($posts, Request $request) {
+    if ($request->header('dateStart') != null) {
+        // if ($_GET['dateStart'] == $_GET['dateEnd']) // set the end of the day
+        //     $_GET['dateEnd'] = $_GET['dateEnd'] . ' 23:59:59';
+        return $posts->whereBetween('created_at', [$request->header('dateStart'), $request->header('dateEnd')]);
+    }
+}
+
+function applySortingFiltersAdmin($posts, Request $request) {
+    if($request->header('filter') != null) {
+        return filterAdmin($posts, $request);
+    }
+
+    $sort = $request->header('sort');
+    if ($sort == null)
+        $sort = 'likes';
     
-    switch ($_GET['sort']) {
+    switch ($sort) {
         case 'likes':
             return array_values($posts->sortByDesc('likes')->all());
             break;
@@ -90,11 +112,16 @@ function applySortingAdmin($posts) {
     }
 }
 
-function applySortingUser($posts) {
-    if (!isset($_GET['sort']))
-        $_GET['sort'] = 'likes';
+function applySortingFiltersUser($posts, Request $request) {
+    if($request->header('filter') != null) {
+        return filteruser($posts, $request);
+    }
     
-    switch ($_GET['sort']) {
+    $sort = $request->header('sort');
+    if ($sort == null)
+    $sort = 'likes';
+    
+    switch ($sort) {
         case 'likes':
             return array_values($posts->sortByDesc('likes')->where('status', 'active')->all());
             break;

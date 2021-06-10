@@ -11,16 +11,16 @@ use App\Models\User;
 use DB;
 
 //////////////////////
-function getPostsWithCategory($all) {
+function getPostsWithCategory($all, Request $request) {
     $CategorySub = New CategorySubTableController();
     if($all) {
-        $postData = applySortingAdmin(Post::all());
+        $postData = applySortingFiltersAdmin(Post::all(), $request);
         foreach($postData as $post) {
             $post->categories = $CategorySub->getCategoriesForPost($post->id);
         }
         return $postData;
     }
-    $postData = applySortingUser(Post::all());
+    $postData = applySortingFiltersUser(Post::all(), $request);
     foreach($postData as $post) {
         $post->categories = $CategorySub->getCategoriesForPost($post->id);
     }
@@ -31,9 +31,9 @@ function getPostsWithCategory($all) {
 function getOnePostWithCategory($admin, $id) {
     $CategorySub = New CategorySubTableController();
     if($admin) {
-        $postData = DB::select("select * from posts where id = $id;");;
+        $postData = DB::select("select * from posts where id = $id;")->first();
         if($postData)
-            $postData[0]->categories = $CategorySub->getCategoriesForPost($id);
+            $postData->categories = $CategorySub->getCategoriesForPost($id);
         return $postData;
     }
     $postData = getOnlyAtivePosts($id);
@@ -43,16 +43,18 @@ function getOnePostWithCategory($admin, $id) {
 }// move to helpers
 /////////////////////////
 
+
+
 class PostsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         //get Posts
         if(isAdmin(auth()->user())) {
-            return getPostsWithCategory(true);
+            return getPostsWithCategory(true, $request);
         }
 
-        return getPostsWithCategory(false);
+        return getPostsWithCategory(false, $request);
         
     }
 
