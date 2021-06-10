@@ -69,18 +69,16 @@ function changeRating($postID, $like) {
 }
 
 function filterAdmin($posts, Request $request) {
-    if (isset($_GET['dateStart'])) {
-        // if ($_GET['dateStart'] == $_GET['dateEnd']) // set the end of the day
-        //     $_GET['dateEnd'] = $_GET['dateEnd'] . ' 23:59:59';
-        return $posts->whereBetween('created_at', [$request->header('dateStart'), $request->header('dateEnd')]);
+    if ($request->header('dateStart') != null) {
+       
+        return $posts->whereBetween('created_at', [$request->header('dateStart'), $request->header('dateEnd')])->all();
     }
 }
 
 function filteruser($posts, Request $request) {
     if ($request->header('dateStart') != null) {
-        // if ($_GET['dateStart'] == $_GET['dateEnd']) // set the end of the day
-        //     $_GET['dateEnd'] = $_GET['dateEnd'] . ' 23:59:59';
-        return $posts->whereBetween('created_at', [$request->header('dateStart'), $request->header('dateEnd')]);
+       
+        return $posts->whereBetween('created_at', [$request->header('dateStart'), $request->header('dateEnd')])->where('status', 'active')->all();
     }
 }
 
