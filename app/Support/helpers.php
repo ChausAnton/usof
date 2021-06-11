@@ -130,7 +130,7 @@ function applySortingFiltersUser($posts, Request $request) {
     
     $sort = $request->header('sort');
     if ($sort == null)
-    $sort = 'likes';
+        $sort = 'likes';
     
     switch ($sort) {
         case 'likes':

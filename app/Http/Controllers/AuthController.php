@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use DB;
+use App\Mail\reset_password;
 
 class AuthController extends Controller
 {
@@ -15,7 +19,7 @@ class AuthController extends Controller
             'login'=> 'required|string|unique:users,login',
             'real_name'=> 'required|string',
             'email'=> 'required|email|unique:users,email',
-            'password'=> 'required|min:4',
+            'password'=> 'required|confirmed|min:4',
             'role' => 'in:admin,user'
         ]);
 
@@ -54,6 +58,53 @@ class AuthController extends Controller
             ]);
         }
         
+    }
+
+    public function requestForPasswordReset(Request $request) {
+        $validated =  $request->validate([
+            'email'=> 'required|email'
+        ]);
+
+        $user = User::find(DB::table('users')->where('email', '=', $validated['email'])->first()->id);
+
+        if (!$user) {
+            return redirect()->back()->withErrors(['email' => trans('User does not exist')]);
+        }
+
+        $token = Str::random(60);
+        $user->password_reset_token = $token;
+        $user->save();
+
+        $mailObj = new \stdClass();
+        $mailObj->token =  $token;
+        $mailObj->receiver = $user->real_name;
+        Mail::to($validated['email'])->send(new reset_password($mailObj));
+
+        return "check your mail";
+
+    }
+
+    public function PasswordReset(Request $request) {
+        $validated =  $request->validate([
+            'email'=> 'required|email',
+            'token'=> 'required|min:20',
+            'password'=> 'required|confirmed|min:4',
+        ]);
+
+        $user = User::find(DB::table('users')->where('email', '=', $validated['email'])->first()->id);
+
+        if (!$user) {
+            return redirect()->back()->withErrors(['email' => trans('User does not exist')]);
+        }
+
+        if(strcmp($validated['token'], $user->password_reset_token) == 0) {
+            $user->password = Hash::make($validated['password']);
+            $user->password_reset_token = "";
+            $user->save();
+            return "your password has been changed";
+        }
+        return "your token not match";
+
     }
 
     public function Logout()
