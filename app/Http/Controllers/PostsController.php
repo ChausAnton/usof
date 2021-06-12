@@ -132,7 +132,6 @@ class PostsController extends Controller
         return $post;
     }
 
-
     public function destroy($id)
     {
         $post = Post::find($id);
