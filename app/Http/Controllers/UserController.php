@@ -36,7 +36,7 @@ class UserController extends Controller
         return User::create($validated);
     } // in future needed to delete
 
-    
+
     public function show($id)
     {
         //show user
@@ -50,8 +50,30 @@ class UserController extends Controller
         if(!isAdmin(auth()->user()) && !isUser(JWTAuth::getToken(), $id)) {
             return "only admin and owner of account can change account's data";
         }
+
+        if($request['avatar'] && isUser(JWTAuth::getToken(), $id)) {
+            if(!file_exists('avatars'))
+                mkdir('avatars');
+            $credentials['profile_picture'] = 'avatars/' . auth()->user()->id . '.png';
+            if (file_exists($credentials['profile_picture']))
+                    file_put_contents($credentials['profile_picture'], base64_decode($request['avatar']));
+            else {
+                $file = fopen($credentials['profile_picture'], "w");
+                fwrite($file, base64_decode($request['avatar']));
+                fclose($file);
+            }
+            $user = auth()->user();
+            $user->image_path = $credentials['profile_picture'];
+            $user->save();
+        }
+
         $user = User::find($id);
-        $user->update($request->all());
+
+        $data = [
+            'real_name' => ($request->input('real_name') ? $request->input('real_name') : $user->real_name)
+        ];
+        
+        $user->update($data);
         return $user;
     }
 

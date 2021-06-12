@@ -26,7 +26,7 @@ class User extends Authenticatable implements JWTSubject
         'role',
         'author_id',
         'token',
-        'password_reset_token'//move to hidden
+        'image_path'
     ];
 
     /**
@@ -35,8 +35,8 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password',
-        //'password_reset_token'
+        'password_reset_token',
+        'password'
     ];
 
     /**

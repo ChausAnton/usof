@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->integer('rating')->default(0);
             $table->string('password_reset_token')->nullable();
+            $table->string('image_path')->default("public/avatars/standart.png");
             $table->enum('role', ['user', 'admin'])->default('user');
             $table->rememberToken();
             $table->timestamps();
