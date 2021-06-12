@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-//include '/Users/antoncaus/Desktop/usoft/app/Http/Controllers/CategorySubTableController.php';
-//include '/Users/anchaus/Desktop/usoft/app/Support/helpers.php';
 use Illuminate\Http\Request;
 use App\Models\Post;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Models\User;
 use DB;
 
 //////////////////////

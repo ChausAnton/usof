@@ -1,11 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-////include '/Users/anchaus/Desktop/usoft/app/Support/helpers.php';
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -18,24 +16,6 @@ class UserController extends Controller
         }
         return User::all();
     }
-
-
-    public function store(Request $request)
-    {
-        //create a user 
-        $validated =  $request->validate([
-            'login'=> 'required|string|unique:users,login',
-            'real_name'=> 'required|string',
-            'email'=> 'required|email|unique:users,email',
-            'password'=> 'required|min:4',
-            'role' => 'in:admin,user'
-        ]);
-
-        $validated['password'] = Hash::make($validated['password']);
-
-        return User::create($validated);
-    } // in future needed to delete
-
 
     public function show($id)
     {

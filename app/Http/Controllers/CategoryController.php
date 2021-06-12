@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-//include '/Users/anchaus/Desktop/usoft/app/Support/helpers.php';
 use Illuminate\Http\Request;
 use App\Models\Category;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Models\User;
+
 
 class CategoryController extends Controller
 {

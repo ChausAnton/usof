@@ -28,7 +28,6 @@ Route::resource('posts', 'App\Http\Controllers\PostsController');
 Route::resource('category', 'App\Http\Controllers\CategoryController');
 Route::resource('comment', 'App\Http\Controllers\CommentController');
 Route::resource('like', 'App\Http\Controllers\LikeController');
-Route::resource('CategorySubTable', 'App\Http\Controllers\CategorySubTableController');
 Route::post('/login', 'App\Http\Controllers\AuthController@Login');
 Route::post('/register', 'App\Http\Controllers\AuthController@register');
 Route::post('/logout', 'App\Http\Controllers\AuthController@Logout');

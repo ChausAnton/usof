@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-////include '/Users/anchaus/Desktop/usoft/app/Support/helpers.php';
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;

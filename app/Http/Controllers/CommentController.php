@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-//include '/Users/anchaus/Desktop/usoft/app/Support/helpers.php';
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Http\Request;
 use App\Models\Comment;
@@ -17,12 +16,6 @@ class CommentController extends Controller
         return getOnlyAtiveComments(NULL);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
 
@@ -43,12 +36,7 @@ class CommentController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function show($id)
     {
         //show Comment
@@ -57,13 +45,7 @@ class CommentController extends Controller
         return getOnlyAtiveComments($id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function update(Request $request, $id)
     {
         //update Comment
@@ -86,12 +68,7 @@ class CommentController extends Controller
         return $Comment;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function destroy($id)
     {
         $post = Comment::find($id);
@@ -100,6 +77,5 @@ class CommentController extends Controller
         }
         return Comment::destroy($id);
         //delete Comment
-        
     }
 }

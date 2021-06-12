@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-//include '/Users/anchaus/Desktop/usoft/app/Support/helpers.php';
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Http\Request;
 use App\Models\Like;
 use DB;
@@ -16,12 +14,6 @@ class LikeController extends Controller
         return Like::all();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         if(auth()->user()) {//likes
@@ -66,43 +58,11 @@ class LikeController extends Controller
         return "only logged user can rated";
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         //show Like
         return Like::find($id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //update Like
-        $Like = Like::find($id);
-        $Like->update($request->all());
-        return $Like;
-    }// to delete
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        return Like::destroy($id);
-        //delete Like
-        
-    }// to delete
 }
