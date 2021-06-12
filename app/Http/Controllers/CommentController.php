@@ -8,12 +8,18 @@ use App\Models\Comment;
 
 class CommentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         //get Comments
+        if($request->header('filter')) {
+            if(isAdmin(auth()->user())) 
+                return Comment::all()->where("post_id", $request->header('post_id'));
+            return getOnlyAtiveComments(NULL, $request->header('post_id'));
+        }
+
         if(isAdmin(auth()->user())) 
             return Comment::all();
-        return getOnlyAtiveComments(NULL);
+        return getOnlyAtiveComments(NULL, NULL);
     }
 
     public function store(Request $request)
@@ -42,7 +48,7 @@ class CommentController extends Controller
         //show Comment
         if(isAdmin(auth()->user())) 
             return Comment::find($id);
-        return getOnlyAtiveComments($id);
+        return getOnlyAtiveComments($id, NULL);
     }
 
    

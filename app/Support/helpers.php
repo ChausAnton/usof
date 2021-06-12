@@ -32,26 +32,30 @@ function getOnlyAtivePosts($id) {
     return DB::select("select * from posts where status = 'active';");
 }
 
-function getOnlyAtiveComments($id) {
+function getOnlyAtiveComments($id, $post_id) {
     if($id) {
         return DB::select("select * from comments where status = 'active' and id = $id;");
+    }
+    if($post_id) {
+        return DB::select("select * from comments where status = 'active' and post_id = $post_id;");
     }
     return DB::select("select * from comments where status = 'active';");
 }
 
-function changeRating($postID, $like) {
-    $author_id = DB::select("select * from posts where id = $postID;")[0]->author_id;
-    if(!$author_id) {
-        $author_id = DB::select("select * from comments where id = $postID;")[0]->author_id;
-        $Comment = Comment::find($postID);
+function changeRating($post_id, $comment_id, $like) {
+    $author_id = 0;
+    if($comment_id) {
+        $author_id = DB::select("select * from comments where id = $comment_id;")[0]->user_id;
+        $Comment = Comment::find($comment_id);
         if(strcmp($like, 'like') == 0)
-            $Comment->likes++;
+            $Comment->rating++;
         else
-            $Comment->likes--;
+            $Comment->rating--;
         $Comment->save();
     }
-    else{
-        $post = Post::find($postID);
+    else {
+        $author_id = DB::select("select * from posts where id = $post_id;")[0]->author_id;
+        $post = Post::find($post_id);
         if(strcmp($like, 'like') == 0)
             $post->likes++;
         else

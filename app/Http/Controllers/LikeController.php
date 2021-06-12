@@ -21,10 +21,8 @@ class LikeController extends Controller
                 $like = DB::select("select * from likes where user_id = " . auth()->user()->id . " and post_id = $request->post_id;");
             else
                 $like = DB::select("select * from likes where user_id = " . auth()->user()->id . " and comment_id = $request->comment_id;");
-            $id = $request->post_id ? $request->post_id : $request->comment_id;
-            changeRating($id, $request->input('type'));
             if(!$like) {
-                
+                changeRating($request->post_id, $request->comment_id, $request->input('type'));
                 $data = [
                     'author' => auth()->user()->login,
                     'user_id' => auth()->user()->id,
@@ -38,6 +36,7 @@ class LikeController extends Controller
                 return Like::create($data);
             }
             elseif($like && strcmp($like[0]->type, $request['type']) != 0) {
+                changeRating($request->post_id, $request->comment_id, $request->input('type'));
                 if($request->post_id)
                     DB::delete("delete from likes where user_id = " . auth()->user()->id . " and post_id = $request->post_id;");
                 else 

@@ -108,7 +108,13 @@ class PostsController extends Controller
             $CategorySub->addCategory($request['category_id'], $post->id);
         }
 
-        if(isAdmin(auth()->user())) {
+        if(strcmp($request['status'], 'inactive') == 0) {
+            if(isset($request['status'])) {
+                $post->status = $request['status'];
+                $post->save();
+            }
+        }
+        elseif(isAdmin(auth()->user())) {
             if(isset($request['status'])) {
                 $post->status = $request['status'];
                 $post->save();

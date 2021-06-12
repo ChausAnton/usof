@@ -11,9 +11,7 @@ class CategoryController extends Controller
     public function index()
     {
         //get Category
-        if(isAdmin(auth()->user()))
-            return Category::all();
-        return "only admin can see all categories";
+        return Category::all();
 
     }
 
