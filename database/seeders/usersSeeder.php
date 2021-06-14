@@ -22,6 +22,7 @@ class usersSeeder extends Seeder
             'real_name' => Str::random(10),
             'email' => "anton271993@ukr.net",
             'password' => Hash::make('2222'),
+            'rating' => -3,
             'role' => "admin",
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -31,6 +32,7 @@ class usersSeeder extends Seeder
             'real_name' => Str::random(10),
             'email' => "anton3@ukr.net",
             'password' => Hash::make('2222'),
+            'rating' => 2,
             'role' => "user",
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')

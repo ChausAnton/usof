@@ -20,6 +20,7 @@ class CreatePostsTable extends Migration
             $table->string('title')->default('');
             $table->string('content')->nullable();
             $table->integer('likes')->default(0);
+            $table->string('categories', 1600)->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });

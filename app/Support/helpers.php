@@ -5,7 +5,6 @@ use App\Models\User;
 use App\Models\Post;
 use App\Models\Comment;
 use Illuminate\Http\Request;
-
 function isAdmin($user) {
     if(!$user || strcmp($user->role, 'admin') != 0) {
         return false;
@@ -45,7 +44,8 @@ function getOnlyAtiveComments($id, $post_id) {
 function changeRating($post_id, $comment_id, $like) {
     $author_id = 0;
     if($comment_id) {
-        $author_id = DB::select("select * from comments where id = $comment_id;")[0]->user_id;
+        $author_id = DB::table('comments')->where('id', $comment_id)->first()->user_id;
+        //$author_id = DB::select("select * from comments where id = $comment_id;")[0]->user_id;
         $Comment = Comment::find($comment_id);
         if(strcmp($like, 'like') == 0)
             $Comment->rating++;

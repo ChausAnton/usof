@@ -28,9 +28,7 @@ class LikeController extends Controller
                     'user_id' => auth()->user()->id,
                     'post_id' => $request->input('post_id'),
                     'comment_id' => $request->input('comment_id'),
-                    'content' => $request->input('content'),
                     'type' => $request->input('type'),
-                    'status' => 'active'
                 ];
                 
                 return Like::create($data);
@@ -46,9 +44,7 @@ class LikeController extends Controller
                     'user_id' => auth()->user()->id,
                     'post_id' => $request->input('post_id'),
                     'comment_id' => $request->input('comment_id'),
-                    'content' => $request->input('content'),
                     'type' => $request->input('type'),
-                    'status' => 'active'
                 ];
                 return Like::create($data);
             }
