@@ -7,6 +7,19 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## How to run this api on mac
+1)Clone this project
+2)run mysql server
+3)create file ".env"
+4)move data from ".env.example" to ".env"
+5)specify database data and mail data
+6)brew install artisan
+7)composer install
+8)php artisan migrate --seed
+9)php artisan key:generate
+10)php artisan jwt:secret
+11)php artisan serve
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
