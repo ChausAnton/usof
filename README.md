@@ -8,9 +8,9 @@
 </p>
 
 ## How to run this api on mac
-1)Clone this project
-2)run mysql server
-3)create file ".env"
+- Clone this project
+- run mysql server
+- create file ".env"
 4)move data from ".env.example" to ".env"
 5)specify database data and mail data
 6)brew install artisan
