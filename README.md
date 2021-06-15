@@ -11,14 +11,14 @@
 - Clone this project
 - run mysql server
 - create file ".env"
-4)move data from ".env.example" to ".env"
-5)specify database data and mail data
-6)brew install artisan
-7)composer install
-8)php artisan migrate --seed
-9)php artisan key:generate
-10)php artisan jwt:secret
-11)php artisan serve
+- move data from ".env.example" to ".env"
+- specify database data and mail data
+- brew install artisan
+- composer install
+- php artisan migrate --seed
+- php artisan key:generate
+- php artisan jwt:secret
+- php artisan serve
 
 ## About Laravel
 
